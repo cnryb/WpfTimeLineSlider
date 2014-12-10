@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -32,15 +33,21 @@ namespace WpfTimeLineSlider
         public TimeLineSlider()
         {
             this.InitializeComponent();
+            Stopwatch stopwatch = new Stopwatch(); stopwatch.Start(); //  开始监视代码
+
+
+
+
+
 
             StartTime = DateTime.Parse("2014-12-10 10:00");
-            EndTime = DateTime.Parse("2014-12-14 12:03");
+            EndTime = DateTime.Parse("2014-12-11 12:03");
             int i = 0;
             long scaleTimeTicks = StartTime.Ticks;
 
             const int interval = 6;
 
-            TimeSpan ts = new TimeSpan(1, 0, 0);
+            TimeSpan ts = new TimeSpan(0, 0, 1);
             scaleTimeTicks += ts.Ticks;
 
             Scale scaleStart = new Scale();
@@ -49,11 +56,6 @@ namespace WpfTimeLineSlider
             scaleStart.Background = new SolidColorBrush(Colors.Red);
             Canvas.SetLeft(scaleStart, interval * i);
             ScaleCanvas.Children.Add(scaleStart);
-            const long second = 10000 * 1000;
-            const long minute = second * 60;
-            const long hour = minute * 60;
-
-            const long day = hour*24;
 
             while (scaleTimeTicks < EndTime.Ticks)
             {
@@ -64,29 +66,29 @@ namespace WpfTimeLineSlider
                 Canvas.SetLeft(scale, interval * i);
                 ScaleCanvas.Children.Add(scale);
 
-                TimeSpan showTimeSpan=new TimeSpan(scaleTimeTicks);
+                TimeSpan showTimeSpan = new TimeSpan(scaleTimeTicks);
 
-                
+
 
                 //整分钟
                 if (showTimeSpan.Seconds == 0)
                 {
-                    scale.Width += 0.8;
+                    scale.Width += 0.1;
                     scale.Height += 5;
 
                 }
 
                 //整小时
-                if (scaleTimeTicks % hour == 0 && ts.Ticks == minute)
+                if (showTimeSpan.Minutes == 0)
                 {
-                    scale.Width += 0.8;
+                    scale.Width += 0.1;
                     scale.Height += 5;
                 }
 
-                //整小时
-                if (scaleTimeTicks % day == 0 && ts.Ticks == hour)
+                //整天
+                if (showTimeSpan.Hours == 0)
                 {
-                    scale.Width += 0.8;
+                    scale.Width += 0.1;
                     scale.Height += 5;
                 }
 
@@ -104,7 +106,20 @@ namespace WpfTimeLineSlider
             Canvas.SetLeft(scaleEnd, interval * i);
             ScaleCanvas.Children.Add(scaleEnd);
 
+
+
+            stopwatch.Stop(); //  停止监视
+            TimeSpan timeSpan = stopwatch.Elapsed; //  获取总时间
+            TimeSpan totalTimeSpan = new TimeSpan(EndTime.Ticks - StartTime.Ticks);
+
+            const string msg = "{0}小时 生成用时{1}";
+            
+            Console.WriteLine(msg,totalTimeSpan.TotalHours, timeSpan);
+
         }
+
+
+
 
         private Scale GenerateScale()
         {
