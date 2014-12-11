@@ -178,7 +178,6 @@ namespace WpfTimeLineSlider
                 i++;
                 scaleTimeTicks += ts.Ticks;
 
-
                 double left = interval * i;
                 if (!(startPoint < left) || !(endPoint > left)) continue;
 
@@ -190,7 +189,6 @@ namespace WpfTimeLineSlider
                 Canvas.SetLeft(scale, left);
                 rectangles.Add(scale);
 
-
                 TimeSpan showTimeSpan = new TimeSpan(scaleTimeTicks);
 
                 //整分钟
@@ -198,7 +196,6 @@ namespace WpfTimeLineSlider
                 {
                     scale.Width += 0.1;
                     scale.Height += 5;
-
                 }
 
                 //整小时
@@ -215,16 +212,13 @@ namespace WpfTimeLineSlider
                     scale.Height += 5;
                 }
             }
-            
 
-            ThreadPool.QueueUserWorkItem(callback =>
+
+            foreach (var rec in rectangles)
             {
-                foreach (var rec in rectangles)
-                {
-                    var rectangle = rec;
-                    Dispatcher.Invoke((Action)(() => ScaleCanvas.Children.Add(rectangle)));
-                }
-            });
+                ScaleCanvas.Children.Add(rec);
+            }
+
 
             stopwatch.Stop(); //  停止监视
             TimeSpan timeSpan = stopwatch.Elapsed; //  获取总时间
