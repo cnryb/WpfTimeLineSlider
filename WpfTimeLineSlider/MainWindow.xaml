@@ -7,8 +7,9 @@
     >
     <Window.Resources>
     </Window.Resources>
-	<Grid>
-		<local:TimeLineSlider StartTime="2014-12-01" EndTime="2014-12-31"/>
-        
-	</Grid>
+    <Grid>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" ScrollChanged="ScrollViewer_OnScrollChanged">
+            <local:TimeLineSlider x:Name="TimeLine" Width="1500" StartTime="2014-12-01" EndTime="2014-12-31"/>
+        </ScrollViewer>
+    </Grid>
 </Window>

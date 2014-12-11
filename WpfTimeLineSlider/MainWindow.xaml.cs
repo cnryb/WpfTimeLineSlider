@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -22,6 +23,13 @@ namespace WpfTimeLineSlider
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void ScrollViewer_OnScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            double startPoint = e.HorizontalOffset;
+            double endPoint = e.HorizontalOffset+e.ViewportWidth;
+            TimeLine.GenerateScale(startPoint, endPoint);
         }
     }
 }
