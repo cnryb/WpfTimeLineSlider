@@ -675,9 +675,20 @@
 
     <Grid x:Name="LayoutRoot">
         <Canvas Name="ScaleCanvas">
+            <Canvas.Resources>
+                <Style TargetType="Rectangle">
+                    <Setter Property="Fill" Value="Blue" />
+                </Style>
+            </Canvas.Resources>
             <!--<wpfTimeLineSlider:Scale Canvas.Left="2" />
             <wpfTimeLineSlider:Scale Canvas.Left="6" />
             <wpfTimeLineSlider:Scale Canvas.Left="10" />-->
+            
+            <!--<Path>
+                <Path.Data>
+                    <RectangleGeometry/>
+                </Path.Data>
+            </Path>-->
         </Canvas>
     </Grid>
 </UserControl>

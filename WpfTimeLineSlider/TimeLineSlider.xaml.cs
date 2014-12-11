@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -33,6 +36,12 @@ namespace WpfTimeLineSlider
         public TimeLineSlider()
         {
             this.InitializeComponent();
+            this.Loaded += TimeLineSlider_Loaded;
+           
+        }
+
+        void TimeLineSlider_Loaded(object sender, RoutedEventArgs e)
+        {
             Stopwatch stopwatch = new Stopwatch(); stopwatch.Start(); //  开始监视代码
 
 
@@ -41,7 +50,7 @@ namespace WpfTimeLineSlider
 
 
             StartTime = DateTime.Parse("2014-12-10 10:00");
-            EndTime = DateTime.Parse("2014-12-11 12:03");
+            EndTime = DateTime.Parse("2014-12-21 12:03");
             int i = 0;
             long scaleTimeTicks = StartTime.Ticks;
 
@@ -50,21 +59,33 @@ namespace WpfTimeLineSlider
             TimeSpan ts = new TimeSpan(0, 0, 1);
             scaleTimeTicks += ts.Ticks;
 
-            Scale scaleStart = new Scale();
-            scaleStart.Width += 1.5;
-            scaleStart.Height += 14;
-            scaleStart.Background = new SolidColorBrush(Colors.Red);
-            Canvas.SetLeft(scaleStart, interval * i);
-            ScaleCanvas.Children.Add(scaleStart);
+            
+
+            List<Rectangle> rectangles = new List<Rectangle>();
 
             while (scaleTimeTicks < EndTime.Ticks)
             {
-
                 i++;
 
-                Scale scale = new Scale();
+                Rectangle scale = new Rectangle();
+                scale.Width = 1;
+                scale.Height = 5;
+                //scale.Fill= new SolidColorBrush(Colors.Blue);
                 Canvas.SetLeft(scale, interval * i);
-                ScaleCanvas.Children.Add(scale);
+                //ScaleCanvas.Children.Add(scale);
+                rectangles.Add(scale);
+                //Thread newWindowThread = new Thread(new ThreadStart(() =>
+                //{
+                //    Border border=new Border();
+                //}));
+                //newWindowThread.SetApartmentState(ApartmentState.STA);
+                //newWindowThread.Start();
+
+                //Path path=new Path();
+
+                //Scale scale = new Scale();
+                //Canvas.SetLeft(scale, interval * i);
+                //ScaleCanvas.Children.Add(scale);
 
                 TimeSpan showTimeSpan = new TimeSpan(scaleTimeTicks);
 
@@ -99,34 +120,41 @@ namespace WpfTimeLineSlider
             }
 
 
-            Scale scaleEnd = new Scale();
-            scaleEnd.Width += 1.5;
-            scaleEnd.Height += 14;
-            scaleEnd.Background = new SolidColorBrush(Colors.Red);
-            Canvas.SetLeft(scaleEnd, interval * i);
-            ScaleCanvas.Children.Add(scaleEnd);
 
-
+            ThreadPool.QueueUserWorkItem(callback =>
+            {
+                //foreach (Action action in rectangles.Select(rectangle => (Action) (() => ScaleCanvas.Children.Add(rectangle))))
+                //{
+                //    Dispatcher.Invoke(action);
+                //}
+                foreach (var rec in rectangles)
+                {
+                    var rectangle = rec;
+                    //todo:在生成时判断会更好 判断用户能看到的画布的区域
+                    Func<double> func = () => Canvas.GetLeft(rectangle);
+                    object obj = Dispatcher.Invoke(func);
+                    double left = (double)obj;
+                    if (!ScaleCanvas.IsArrangeValid && left < ScaleCanvas.ActualWidth)
+                    {
+                        Dispatcher.Invoke((Action)(() => ScaleCanvas.Children.Add(rectangle)));
+                    }
+                    else if (left < ScaleCanvas.ActualWidth)
+                    {
+                        Dispatcher.Invoke((Action)(() => ScaleCanvas.Children.Add(rectangle)));
+                    }
+                }
+            });
 
             stopwatch.Stop(); //  停止监视
             TimeSpan timeSpan = stopwatch.Elapsed; //  获取总时间
             TimeSpan totalTimeSpan = new TimeSpan(EndTime.Ticks - StartTime.Ticks);
 
             const string msg = "{0}小时 生成用时{1}";
-            
-            Console.WriteLine(msg,totalTimeSpan.TotalHours, timeSpan);
 
+            Console.WriteLine(msg, totalTimeSpan.TotalHours, timeSpan);
         }
 
 
-
-
-        private Scale GenerateScale()
-        {
-            Scale scale = new Scale();
-
-
-            return scale;
-        }
+ 
     }
 }
