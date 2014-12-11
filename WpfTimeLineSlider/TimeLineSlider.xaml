@@ -674,13 +674,12 @@
     </UserControl.Resources>
 
     <Grid x:Name="LayoutRoot">
-        <Canvas Name="ScaleCanvas">
-            <Canvas.Resources>
+        <wpfTimeLineSlider:ScaleCanvas x:Name="ScaleCanvas">
+            <wpfTimeLineSlider:ScaleCanvas.Resources>
                 <Style TargetType="Rectangle">
                     <Setter Property="Fill" Value="Blue" />
                 </Style>
-            </Canvas.Resources>
-            
-        </Canvas>
+            </wpfTimeLineSlider:ScaleCanvas.Resources>
+        </wpfTimeLineSlider:ScaleCanvas>
     </Grid>
 </UserControl>

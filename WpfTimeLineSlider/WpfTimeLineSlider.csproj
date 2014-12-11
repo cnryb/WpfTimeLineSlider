@@ -54,6 +54,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ScaleCanvas.xaml.cs">
+      <DependentUpon>ScaleCanvas.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ScaleType.cs" />
     <Compile Include="TimeLineSlider.xaml.cs">
       <DependentUpon>TimeLineSlider.xaml</DependentUpon>
@@ -70,6 +73,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ScaleCanvas.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="TimeLineSlider.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
