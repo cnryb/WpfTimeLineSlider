@@ -37,7 +37,7 @@ namespace WpfTimeLineSlider
         {
             this.InitializeComponent();
             StartTime = DateTime.Parse("2014-12-10 10:00");
-            EndTime = DateTime.Parse("2014-12-11 12:03");
+            EndTime = DateTime.Parse("2014-12-31 12:03");
         }
 
         //void TimeLineSlider_Loaded(object sender, RoutedEventArgs e)
@@ -166,20 +166,22 @@ namespace WpfTimeLineSlider
             int i = 0;
             long scaleTimeTicks = StartTime.Ticks;
 
-            const int interval = 6;
+            const int interval = 5;
 
             TimeSpan ts = new TimeSpan(0, 0, 1);
             scaleTimeTicks += ts.Ticks;
 
-            List<Rectangle> rectangles = new List<Rectangle>();
+            int num = 0;
 
             while (scaleTimeTicks < EndTime.Ticks)
             {
                 i++;
+                
                 scaleTimeTicks += ts.Ticks;
 
                 double left = interval * i;
                 if (!(startPoint < left) || !(endPoint > left)) continue;
+                num++;
 
                 Rectangle scale = new Rectangle
                 {
@@ -187,7 +189,6 @@ namespace WpfTimeLineSlider
                     Height = 5
                 };
                 Canvas.SetLeft(scale, left);
-                rectangles.Add(scale);
 
                 TimeSpan showTimeSpan = new TimeSpan(scaleTimeTicks);
 
@@ -196,28 +197,52 @@ namespace WpfTimeLineSlider
                 {
                     scale.Width += 0.1;
                     scale.Height += 5;
+
+                    if (showTimeSpan.Minutes != 0)
+                    {
+                        var tb = new TextBlock();
+                        tb.Text = showTimeSpan.Minutes + "分";
+                        Canvas.SetTop(tb, 15);
+                        Canvas.SetLeft(tb, left - 2);
+                        ScaleCanvas.Children.Add(tb);
+                    }
                 }
 
                 //整小时
-                if (showTimeSpan.Minutes == 0)
+                if (showTimeSpan.Minutes == 0 && showTimeSpan.Seconds == 0)
                 {
                     scale.Width += 0.1;
                     scale.Height += 5;
-                }
 
+                    if (showTimeSpan.Hours != 0)
+                    {
+                        var tb = new TextBlock();
+                        tb.Text = new DateTime(showTimeSpan.Ticks).ToString("yyyy-MM-dd hh:mm");
+                        Canvas.SetTop(tb, 18);
+                        Canvas.SetLeft(tb, left - 2);
+                        ScaleCanvas.Children.Add(tb);
+                    }
+                }
                 //整天
-                if (showTimeSpan.Hours == 0)
+                if (showTimeSpan.Hours == 0 && showTimeSpan.Minutes == 0 && showTimeSpan.Seconds == 0)
                 {
                     scale.Width += 0.1;
                     scale.Height += 5;
+
+                    if (showTimeSpan.Days != 0)
+                    {
+                        var tb = new TextBlock();
+                        tb.Text = new DateTime(showTimeSpan.Ticks).ToString("yyyy-MM-dd hh:mm");
+                        Canvas.SetTop(tb, 22);
+                        Canvas.SetLeft(tb, left - 2);
+                        ScaleCanvas.Children.Add(tb);
+                    }
                 }
+                ScaleCanvas.Children.Add(scale);
             }
 
-
-            foreach (var rec in rectangles)
-            {
-                ScaleCanvas.Children.Add(rec);
-            }
+            ScaleCanvas.Width = interval*i;
+           
 
 
             stopwatch.Stop(); //  停止监视
@@ -225,7 +250,7 @@ namespace WpfTimeLineSlider
 
             const string msg = "生成 {0} 个刻度 生成用时{1}";
 
-            Console.WriteLine(msg, rectangles.Count, timeSpan);
+            Console.WriteLine(msg, num, timeSpan);
         }
 
     }
