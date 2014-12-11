@@ -165,20 +165,41 @@ namespace WpfTimeLineSlider
 
             int i = 0;
             long scaleTimeTicks = StartTime.Ticks;
+            //文字距顶部距离
+            double textBlockTop = 15;
 
+            //刻度间距
             const int interval = 5;
 
+
+
+
+            Rectangle startRec = new Rectangle
+            {
+                Width = 2,
+                Height = 10,
+                Fill = new SolidColorBrush(Colors.Red)
+            };
+            var startTb = new TextBlock();
+            startTb.Text = "开始\r\n" + StartTime.ToString("yyyy-MM-dd hh:mm");
+            startTb.Foreground = new SolidColorBrush(Colors.Red);
+            Canvas.SetTop(startTb, textBlockTop);
+            Canvas.SetLeft(startTb, 2);
+            ScaleCanvas.Children.Add(startTb);
+            Canvas.SetLeft(startRec, interval * i);
+            ScaleCanvas.Children.Add(startRec);
+
+
             TimeSpan ts = new TimeSpan(0, 0, 1);
-            scaleTimeTicks += ts.Ticks;
 
             int num = 0;
 
             while (scaleTimeTicks < EndTime.Ticks)
             {
                 i++;
-                
-                scaleTimeTicks += ts.Ticks;
 
+                scaleTimeTicks += ts.Ticks;
+                if (scaleTimeTicks >= EndTime.Ticks) break;
                 double left = interval * i;
                 if (!(startPoint < left) || !(endPoint > left)) continue;
                 num++;
@@ -201,8 +222,8 @@ namespace WpfTimeLineSlider
                     if (showTimeSpan.Minutes != 0)
                     {
                         var tb = new TextBlock();
-                        tb.Text = showTimeSpan.Minutes + "分";
-                        Canvas.SetTop(tb, 15);
+                        tb.Text = new DateTime(showTimeSpan.Ticks).ToString("yyyy-MM-dd hh:mm");
+                        Canvas.SetTop(tb, textBlockTop);
                         Canvas.SetLeft(tb, left - 2);
                         ScaleCanvas.Children.Add(tb);
                     }
@@ -218,7 +239,7 @@ namespace WpfTimeLineSlider
                     {
                         var tb = new TextBlock();
                         tb.Text = new DateTime(showTimeSpan.Ticks).ToString("yyyy-MM-dd hh:mm");
-                        Canvas.SetTop(tb, 18);
+                        Canvas.SetTop(tb, textBlockTop);
                         Canvas.SetLeft(tb, left - 2);
                         ScaleCanvas.Children.Add(tb);
                     }
@@ -233,16 +254,31 @@ namespace WpfTimeLineSlider
                     {
                         var tb = new TextBlock();
                         tb.Text = new DateTime(showTimeSpan.Ticks).ToString("yyyy-MM-dd hh:mm");
-                        Canvas.SetTop(tb, 22);
+                        Canvas.SetTop(tb, textBlockTop);
                         Canvas.SetLeft(tb, left - 2);
                         ScaleCanvas.Children.Add(tb);
                     }
                 }
                 ScaleCanvas.Children.Add(scale);
             }
+            i++;
+            ScaleCanvas.Width = interval * i;
 
-            ScaleCanvas.Width = interval*i;
-           
+            Rectangle endRec = new Rectangle
+            {
+                Width = 2,
+                Height = 10,
+                Fill = new SolidColorBrush(Colors.Red)
+            };
+            var endTb = new TextBlock();
+            endTb.Text = "结束\r\n" + EndTime.ToString("yyyy-MM-dd hh:mm");
+            endTb.TextAlignment = TextAlignment.Right;
+            endTb.Foreground = new SolidColorBrush(Colors.Red);
+            Canvas.SetTop(endTb, textBlockTop);
+            Canvas.SetRight(endTb, 2);
+            ScaleCanvas.Children.Add(endTb);
+            Canvas.SetLeft(endRec, interval * (i-1));
+            ScaleCanvas.Children.Add(endRec);
 
 
             stopwatch.Stop(); //  停止监视
