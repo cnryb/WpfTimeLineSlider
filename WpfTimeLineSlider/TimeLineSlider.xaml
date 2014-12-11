@@ -674,7 +674,14 @@
     </UserControl.Resources>
 
     <Grid x:Name="LayoutRoot">
-        <wpfTimeLineSlider:ScaleCanvas x:Name="ScaleCanvas">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"></RowDefinition>
+            <RowDefinition Height="91*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Slider Style="{StaticResource SliderStyle1}"></Slider>
+        <wpfTimeLineSlider:ScaleCanvas 
+            Grid.Row="1"
+            x:Name="ScaleCanvas">
             <wpfTimeLineSlider:ScaleCanvas.Resources>
                 <Style TargetType="Rectangle">
                     <Setter Property="Fill" Value="Blue" />
