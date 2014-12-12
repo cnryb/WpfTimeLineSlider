@@ -32,7 +32,8 @@ namespace WpfTimeLineSlider
         {
             Children.Clear();
 
-            Stopwatch stopwatch = new Stopwatch(); stopwatch.Start(); //  开始监视代码
+            Stopwatch stopwatch = new Stopwatch(); 
+            stopwatch.Start(); //  开始监视代码
 
             int i = 0;
             long scaleTimeTicks = StartTime.Ticks;

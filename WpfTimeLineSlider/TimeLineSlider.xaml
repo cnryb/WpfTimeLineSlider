@@ -13,6 +13,7 @@
             <Setter Property="Stylus.IsPressAndHoldEnabled" Value="False"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="#FFC4C4C4"/>
+            <Setter Property="TickPlacement" Value="BottomRight"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Slider}">
@@ -23,10 +24,10 @@
                                     <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}"/>
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
-                                <TickBar x:Name="TopTick" Fill="{TemplateBinding Foreground}" Height="4" Placement="Top" Grid.Row="0" Visibility="Collapsed"/>
+                                <TickBar x:Name="TopTick" Fill="{TemplateBinding Foreground}" Height="4" Placement="Top" Grid.Row="0"/>
                                 <!--<TickBar x:Name="BottomTick" Fill="{TemplateBinding Foreground}" Height="4" Placement="Bottom" Grid.Row="2"/>-->
                                 <Canvas x:Name="BottomTick" Grid.Row="2"/>
-                                <Border x:Name="TrackBackground" BorderThickness="1" Background="#FFE7EAEA" CornerRadius="1" Height="4" Margin="5,0" Grid.Row="1" VerticalAlignment="Center">
+                                <Border x:Name="TrackBackground" BorderThickness="1" Background="#FFE7EAEA" CornerRadius="1" Height="4" Margin="5,0" Grid.Row="1" VerticalAlignment="Center" Visibility="Collapsed">
                                     <Border.BorderBrush>
                                         <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                                             <GradientStop Color="#FFAEB1AF" Offset="0.1"/>
@@ -673,20 +674,17 @@
         </Style>
     </UserControl.Resources>
 
-    <Grid x:Name="LayoutRoot">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="3*"></RowDefinition>
-            <RowDefinition Height="91*"></RowDefinition>
-        </Grid.RowDefinitions>
-        <Slider Style="{StaticResource SliderStyle1}"></Slider>
+    <Canvas x:Name="LayoutRoot">
         <wpfTimeLineSlider:ScaleCanvas 
-            Grid.Row="1"
-            x:Name="ScaleCanvas">
+            x:Name="ScaleCanvas"
+            Canvas.Top="20px" 
+            >
             <wpfTimeLineSlider:ScaleCanvas.Resources>
                 <Style TargetType="Rectangle">
                     <Setter Property="Fill" Value="Blue" />
                 </Style>
             </wpfTimeLineSlider:ScaleCanvas.Resources>
         </wpfTimeLineSlider:ScaleCanvas>
-    </Grid>
+        <Slider Style="{StaticResource SliderStyle1}"></Slider>
+    </Canvas>
 </UserControl>
